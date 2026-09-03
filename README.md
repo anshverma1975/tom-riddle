@@ -4,7 +4,6 @@
 
 This is a **single-file remake** of [MaximeRivest/riddle](https://github.com/MaximeRivest/riddle) — ported from Rust/reMarkable Paper Pro to one `index.html` you can open or deploy anywhere. No build, no server.
 
-![paper](https://img.shields.io/badge/paper-1943-black) ![single%20file-58kB-lightgrey) ![license-MIT-blue)
 
 ---
 
