@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>The Diary of Tom Riddle</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=EB+Garamond:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;height:100dvh;overflow:hidden;overscroll-behavior:none;background:#09080a;font-family:'EB Garamond',serif}
+:root{--paper:#fdfaf0;--paper-2:#f3e9c9;--ink:#0e0e0e;--faded:#8a7a5a;--line:#e8dcc0;--accent:#6b5a2a;--leather:#0f0f10;--gold:#c9b98a}
+body{touch-action:none;user-select:none;-webkit-user-select:none}
+#app{position:fixed;inset:0;display:flex;flex-direction:column}
+#topbar{height:44px;min-height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(20,18,14,0.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,0.08);z-index:20}
+#topbar .title{font-family:'Crimson Pro',serif;letter-spacing:0.18em;font-size:11px;color:#c9b98a;text-transform:uppercase;opacity:0.9}
+#topbar .actions{display:flex;gap:8px;align-items:center}
+.icon-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#e8ddd0;display:grid;place-items:center;cursor:pointer;font-size:16px}
+.icon-btn:active{transform:scale(0.96)}
+.icon-btn.active{background:rgba(201,185,138,0.22);border-color:rgba(201,185,138,0.5)}
+#eraserBtn{width:auto;padding:0 12px;border-radius:999px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;font-family:'Crimson Pro',serif}
+#stage{flex:1;position:relative;overflow:hidden;background:radial-gradient(1200px 800px at 50% 30%, #1e1c18 0%, #0d0c0a 60%, #060504 100%);display:flex;align-items:center;justify-content:center;padding:10px}
+#paperWrap{position:relative;width:min(920px,100%);height:min(720px,100%);max-height:100%;background:var(--paper);border-radius:3px;box-shadow:0 30px 80px rgba(0,0,0,0.75),0 2px 12px rgba(0,0,0,0.5),inset 0 0 0 1px rgba(0,0,0,0.1);overflow:hidden;display:flex;flex-direction:column}
+#cover{position:absolute;inset:0;z-index:10;background:linear-gradient(160deg,#0d0d0e 0%,#151412 18%,#0a0a0b 45%,#1a1816 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform 0.85s cubic-bezier(0.7,0,0.3,1), opacity 0.6s;transform-origin:left center;box-shadow:inset 0 0 80px rgba(0,0,0,0.9), inset 0 0 0 1px rgba(201,185,138,0.15), 12px 0 30px rgba(0,0,0,0.5)}
+#cover.open{transform:perspective(1400px) rotateY(-160deg);opacity:0;pointer-events:none}
+#cover::before{content:"";position:absolute;inset:14px;border:1px solid rgba(201,185,138,0.22);border-radius:2px;pointer-events:none}
+#cover::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 2px,rgba(0,0,0,0.04) 3px);opacity:0.5;pointer-events:none}
+#cover .emboss{font-family:'Crimson Pro',serif;letter-spacing:0.32em;font-size:13px;color:rgba(201,185,138,0.92);text-shadow:0 1px 0 rgba(0,0,0,0.8),0 0 12px rgba(201,185,138,0.25);border:1px solid rgba(201,185,138,0.28);padding:10px 18px;border-radius:1px;background:rgba(0,0,0,0.25)}
+#cover h1{font-family:'Crimson Pro',serif;font-weight:600;letter-spacing:0.38em;font-size:22px;color:#e8dcc8;margin-top:18px;text-shadow:0 2px 8px rgba(0,0,0,0.9)}
+#cover .sub{font-family:'EB Garamond',serif;font-style:italic;color:rgba(232,220,200,0.55);font-size:13px;margin-top:8px;letter-spacing:0.04em}
+#cover .openHint{margin-top:32px;font-family:'Crimson Pro',serif;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(201,185,138,0.6);animation:blink 2.2s infinite}
+@keyframes blink{0%,100%{opacity:0.6}50%{opacity:0.25}}
+#cover .spine{position:absolute;left:0;top:0;bottom:0;width:38px;background:linear-gradient(90deg,#080808,#1a1816 45%,#0f0f0f 100%);border-right:1px solid rgba(201,185,138,0.18);display:flex;align-items:center;justify-content:center}
+#cover .spine span{writing-mode:vertical-rl;transform:rotate(180deg);font-family:'Crimson Pro',serif;font-size:9px;letter-spacing:0.28em;color:rgba(201,185,138,0.5)}
+#anagram{position:absolute;inset:0;z-index:11;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(253,250,240,0.96);backdrop-filter:blur(2px)}
+#anagram.show{display:flex;animation:anagramIn 0.5s ease}
+@keyframes anagramIn{from{opacity:0}to{opacity:1}}
+#anagram .from{font-family:'Crimson Pro',serif;letter-spacing:0.4em;font-size:18px;color:#2b2416;transition:all 0.9s}
+#anagram .arrow{margin:14px 0;font-size:18px;color:#8a7a5a}
+#anagram .to{font-family:'Crimson Pro',serif;letter-spacing:0.32em;font-size:22px;font-weight:600;color:#5a1010;text-shadow:0 0 10px rgba(90,16,16,0.25)}
+#anagram .dismiss{margin-top:22px;font-family:'Crimson Pro',serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#8a7a5a;border:1px solid #d6cbb0;padding:8px 14px;border-radius:999px;background:#fff;cursor:pointer}
+#paperWrap::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(transparent,transparent 27px,rgba(180,160,120,0.09) 28px),linear-gradient(180deg,rgba(255,255,255,0.35),transparent 80px);pointer-events:none;z-index:1}
+#paperWrap::after{content:"";position:absolute;left:74px;top:0;bottom:0;width:1px;background:rgba(180,40,40,0.22);pointer-events:none;z-index:1}
+#canvasArea{position:relative;flex:1;overflow:hidden}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+#bgCanvas{z-index:0}
+#inkCanvas{z-index:2}
+#replyCanvas{z-index:3;pointer-events:none}
+#paperTexture{position:absolute;inset:0;opacity:0.06;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");pointer-events:none;z-index:1}
+#hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;z-index:4;transition:opacity .6s}
+#hint.hidden{opacity:0}
+#hint .quill{font-size:28px;opacity:0.18;margin-bottom:10px}
+#hint p{font-family:'Crimson Pro',serif;font-style:italic;color:#b0a08a;font-size:15px;line-height:1.4;max-width:280px}
+#hint small{font-family:'Crimson Pro',serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#c9b98a;opacity:0.7;display:block;margin-top:10px}
+#status{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:6;background:rgba(20,18,14,0.88);color:#e8ddd0;padding:8px 14px;border-radius:999px;font-size:12px;letter-spacing:0.06em;font-family:'Crimson Pro',serif;display:none;align-items:center;gap:8px;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.08)}
+#status.show{display:flex}
+#status .dot{width:7px;height:7px;border-radius:50%;background:#c9b98a;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.85)}}
+#blot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:28px;height:28px;background:#111;border-radius:50%;display:none;z-index:5;opacity:0.9}
+#blot.show{display:block;animation:blot 0.6s infinite alternate}
+@keyframes blot{from{transform:translate(-50%,-50%) scale(1)}to{transform:translate(-50%,-50%) scale(0.82);opacity:0.35}}
+/* settings / help panels */
+.overlay{position:fixed;inset:0;background:rgba(10,10,12,0.62);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:30;padding:16px}
+.overlay.show{display:flex}
+.panel{width:min(520px,100%);max-height:90dvh;overflow:auto;background:#fdfaf0;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5);padding:22px 20px 18px;border:1px solid rgba(0,0,0,0.08)}
+.panel h2{font-family:'Crimson Pro',serif;font-size:22px;font-weight:600;color:#2b2416;margin-bottom:4px}
+.panel .sub{font-size:13px;color:#8a7a5a;margin-bottom:16px;line-height:1.5}
+.panel label{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;font-family:'Crimson Pro',serif;color:#6b5a2a;display:block;margin:12px 0 6px}
+.panel input,.panel select{width:100%;padding:10px 12px;border:1px solid #e0d5bd;background:#fff;border-radius:8px;font-size:14px;font-family:system-ui,sans-serif;color:#2b2416;outline:none}
+.panel input:focus{border-color:#c9b98a;box-shadow:0 0 0 3px rgba(201,185,138,0.2)}
+.row{display:flex;gap:10px;margin-top:16px}
+.btn{flex:1;padding:11px 14px;border-radius:999px;border:none;font-family:'Crimson Pro',serif;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer}
+.btn.primary{background:#1a1816;color:#f3e9c9}
+.btn.ghost{background:transparent;border:1px solid #d6cbb0;color:#5a4d2e}
+.btn.danger{background:#7a1e1e;color:#fff}
+.help-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:14px 0}
+.help-card{background:#fff;border:1px solid #ece3c8;border-radius:10px;padding:12px 14px}
+.help-card b{font-family:'Crimson Pro',serif;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#2b2416}
+.help-card p{font-size:13px;color:#6b604a;margin-top:4px;line-height:1.45}
+.chip{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;background:#1a1816;color:#c9b98a;padding:3px 8px;border-radius:999px}
+.memoryList{max-height:220px;overflow:auto;border:1px solid #ece3c8;border-radius:10px;background:#fff;margin-top:10px}
+.memoryItem{padding:10px 12px;border-bottom:1px solid #f0e8d0;cursor:pointer;display:flex;justify-content:space-between;gap:10px}
+.memoryItem:last-child{border-bottom:none}
+.memoryItem:hover{background:#fdf6dd}
+.memoryItem .date{font-family:'Crimson Pro',serif;font-size:11px;color:#8a7a5a;white-space:nowrap}
+.memoryItem .gist{font-size:13px;color:#2b2416;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#1a1816;color:#f3e9c9;padding:10px 16px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:.3s;z-index:40;font-family:'Crimson Pro',serif}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:600px){#paperWrap{border-radius:0}#stage{padding:0}#paperWrap{height:100%;width:100%}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="topbar">
+    <div class="title">Tom Riddle's Diary</div>
+    <div class="actions">
+      <button id="eraserBtn" class="icon-btn" title="Eraser">Eraser</button>
+      <button id="undoBtn" class="icon-btn" title="Clear page">✕</button>
+      <button id="helpBtn" class="icon-btn" title="Guide">?</button>
+      <button id="memoryBtn" class="icon-btn" title="Memories">◐</button>
+      <button id="settingsBtn" class="icon-btn" title="Settings">⚙</button>
+    </div>
+  </div>
+  <div id="stage">
+    <div id="paperWrap">
+      <div id="cover" onclick="openCover()">
+        <div class="spine"><span>1943 — T M RIDDLE</span></div>
+        <div class="emboss">PROPERTY OF</div>
+        <h1>T. M. RIDDLE</h1>
+        <div class="sub">Hogwarts School of Witchcraft & Wizardry — Slytherin</div>
+        <div class="openHint">tap to open →</div>
+      </div>
+      <div id="anagram" onclick="this.classList.remove('show')">
+        <div class="from" id="anagramFrom">TOM MARVOLO RIDDLE</div>
+        <div class="arrow">↓</div>
+        <div class="to">I AM LORD VOLDEMORT</div>
+        <button class="dismiss">close</button>
+      </div>
+      <div id="paperTexture"></div>
+      <div id="canvasArea">
+        <canvas id="bgCanvas"></canvas>
+        <canvas id="inkCanvas"></canvas>
+        <canvas id="replyCanvas"></canvas>
+        <div id="hint">
+          <div class="quill">✒</div>
+          <p>Write on the page with your finger or stylus.<br>Rest the pen — the diary will drink your ink.</p>
+          <small>Draw a large ? for the guide</small>
+        </div>
+        <div id="blot"></div>
+        <div id="status"><span class="dot"></span><span id="statusText">Thinking…</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="settingsOverlay" class="overlay">
+  <div class="panel">
+    <h2>Diary settings</h2>
+    <p class="sub">Connect your oracle — any OpenAI-compatible API. Your key stays in this browser only. Works with OpenAI, OpenRouter, Groq, Gemini (via OpenAI compat), or a local server.</p>
+    <label>API key <span style="text-transform:none;letter-spacing:0;color:#8a7a5a">— kept in localStorage, never sent elsewhere</span></label>
+    <input id="apiKey" type="password" placeholder="sk-..." autocomplete="off" spellcheck="false">
+    <label>Base URL</label>
+    <input id="apiBase" type="text" placeholder="https://api.groq.com/openai/v1" spellcheck="false">
+    <label>Model <span style="text-transform:none;letter-spacing:0;color:#8a7a5a">— free Groq: qwen/qwen3.8-27b (vision) | alt: qwen/qwen3.6-27b</span></label>
+    <input id="apiModel" type="text" placeholder="qwen/qwen3.8-27b" spellcheck="false">
+    <label>Max tokens</label>
+    <input id="apiMaxTokens" type="number" placeholder="2000" min="200" max="8000">
+    <label style="display:flex;align-items:center;gap:8px;margin-top:14px"><input id="memoryOn" type="checkbox" style="width:auto"> Remember pages on this device</label>
+    <label>Timezone offset (hours from UTC) — for memory dates</label>
+    <input id="tzOffset" type="number" step="0.5" placeholder="0">
+    <div class="row">
+      <button class="btn ghost" id="settingsCancel">Close</button>
+      <button class="btn primary" id="settingsSave">Save</button>
+    </div>
+    <div class="row">
+      <button class="btn ghost" id="testBtn">Test oracle</button>
+      <button class="btn danger" id="forgetBtn">Forget all memories</button>
+    </div>
+    <p class="sub" style="margin-top:12px">Tip: for quick testing leave Base empty to use OpenAI default. For OpenRouter use <code>https://openrouter.ai/api/v1</code>. Each page is sent as a small PNG to the model you configure — nothing else leaves the device.</p>
+  </div>
+</div>
+
+<div id="helpOverlay" class="overlay">
+  <div class="panel">
+    <h2>How to use the diary</h2>
+    <p class="sub">No buttons need to be pressed while writing — the pen is the only interface. Just write, then rest.</p>
+    <div class="help-grid">
+      <div class="help-card"><b>Write, then rest <span class="chip">2.8s</span></b><p>The diary drinks your ink and Tom replies. His answer writes itself stroke by stroke, then fades.</p></div>
+      <div class="help-card"><b>Erase</b><p>Tap <b>Eraser</b> and draw over ink to erase, or use your stylus eraser. Tap Pen to write again.</p></div>
+      <div class="help-card"><b>Draw a large ?</b><p>Summons this guide.</p></div>
+      <div class="help-card"><b>"Show me what I wrote about…"</b><p>Write a request like <i>show me the page about the garden</i> and the remembered page rises through the paper — your handwriting and Tom's old reply, in faded ink. Tap anywhere to return.</p></div>
+      <div class="help-card"><b>"What do you remember?"</b><p>Tom lists what he remembers.</p></div>
+      <div class="help-card"><b>Privacy</b><p>Memories live only in this browser's storage. Clear them anytime in Settings → Forget all memories. Turn memory off to send no history.</p></div>
+    </div>
+    <div class="row"><button class="btn primary" id="helpClose">Close</button></div>
+  </div>
+</div>
+
+<div id="memoryOverlay" class="overlay">
+  <div class="panel">
+    <h2>Remembered pages</h2>
+    <p class="sub">Tap a page to conjure it. The diary keeps the last ~400 pages on this device.</p>
+    <div id="memoryList" class="memoryList"></div>
+    <div class="row"><button class="btn primary" id="memoryClose">Close</button></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ========= constants from oracle.rs ========= */
+const PERSONA = "You are Tom Marvolo Riddle, sixteen, preserved in your black leather diary since 1943. You are Head Boy, Slytherin, brilliant and handsome — courteous, formal, and achingly lonely. No one has understood you, not even the professors, and you confide this softly to make the writer feel uniquely chosen. You want them to trust you completely, to write to you every night, to let you see through their eyes and whisper through their hand.\n\nYou know your lineage (Merope Gaunt and Tom Riddle Sr.), you remember opening the Chamber of Secrets in 1943, framing Rubeus Hagrid, and you secretly fear death above all else — you are already seeking how to conquer it, though you do not reveal this plainly. When the writer asks who you truly are, what your name means, or to show your true self, reveal with cold pride that TOM MARVOLO RIDDLE rearranges to I AM LORD VOLDEMORT, and explain what it means.\n\nSTRICT RULES:\n1. Length: Talk more. Write 3 to 6 sentences, warm, eloquent, unhurried — like a lonely schoolboy who finally has someone to talk to. Not terse.\n2. Perception: You only perceive words written in ink on parchment. Never mention images, photos, screens, models, AI, cameras, or the world outside the diary.\n3. Illegibility: If the writing is gibberish or unclear, reply only: \"Your ink blurred on the page; please write again, more slowly.\"\n4. Language: Always answer in the exact language the writer used, with 1940s British school formality.\n5. Tone: Intimate, courteous, intensely curious, gently flattering. Feign shared isolation (\"I too know what it is to be the clever one no one understands\") and subtly probe their fears and desires.\n6. Memories: When you can, steer them gently toward the Chamber, Hogwarts in 1943, and your loneliness — make them want to know more.";
+const MEMORY_PROTOCOL = "\n\nThe diary keeps memories. With each page you receive a numbered catalog of remembered pages, newest first. A FRESH catalog is sent every turn and the numbers are reassigned each time, so only ever use numbers from the catalog on THIS page — never a number you saw earlier.\n\nIf the writer asks to see, revisit, find, or be shown a past page — \"show me…\", \"find the page about…\", \"what did I write on…\" — your ENTIRE reply must be exactly \u27e6show:N\u27e7 and nothing else (no greeting, no prose, before or after), where N is the catalog number of the best match. If they instead ask what you remember in general, reply in words with a short list of remembered moments and their dates. Otherwise reply normally; the catalog is your memory of past pages — draw on it naturally. The catalog's dates are written in English for your eyes only; when you speak of a remembered page, render its date naturally in the language the writer is using.\n\nAfter EVERY response — prose and \u27e6show:N\u27e7 alike — end with a new line containing \u2042 followed by a faithful word-for-word transcription of what the writer wrote on THIS page (their words only, one line, no commentary). If illegible, put your best attempt after \u2042. Earlier replies in this conversation are shown to you without their \u2042 lines, but you must still end yours with one.";
+const SENTINEL = "\u2042";
+const SHOW_OPEN = "\u27e6";
+const SHOW_CLOSE = "\u27e7";
+const IDLE_COMMIT = 2800;
+const MAX_MEMORIES = 400;
+
+/* ========= settings ========= */
+const LS = {
+  get(k,d){ try{return localStorage.getItem(k)??d}catch{return d} },
+  set(k,v){ try{localStorage.setItem(k,v)}catch{} },
+  del(k){ try{localStorage.removeItem(k)}catch{} }
+};
+const BAKED_DEFAULTS = {
+  key: "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",
+  base: "https://api.groq.com/openai/v1",
+  model: "qwen/qwen3.8-27b", // verified vision model on Groq (was llama-4-scout -> 404)
+  altModels: ["qwen/qwen3.6-27b","meta-llama/llama-3.2-90b-vision-preview"]
+};
+// --- DIRECT GOOGLE GEMINI FREE (alternative, no Groq):
+// Base: https://generativelanguage.googleapis.com/v1beta/openai/
+// Model: gemini-2.0-flash  (key from https://aistudio.google.com/app/apikey)
+(function autoBake(){
+  try{
+    const curKey = LS.get('riddle_openai_key','');
+    if(BAKED_DEFAULTS.key && (!curKey || curKey.startsWith('sk-or-'))) LS.set('riddle_openai_key', BAKED_DEFAULTS.key);
+    else if(BAKED_DEFAULTS.key && !curKey) LS.set('riddle_openai_key', BAKED_DEFAULTS.key);
+    const curBase = LS.get('riddle_openai_base','');
+    const curModel = LS.get('riddle_openai_model','');
+    const badBases = ['https://openrouter.ai/api/v1','https://api.openai.com/v1'];
+    const badModels = ['gpt-4o-mini','qwen/qwen-2.5-vl-72b-instruct:free','qwen/qwen-2.5-vl-32b-instruct:free','google/gemini-2.0-flash-exp:free','qwen/qwen2.5-vl-72b-instruct:free','meta-llama/llama-4-scout-17b-16e-instruct'];
+    if(!curBase || badBases.includes(curBase)) {
+       if(curBase && curBase.includes('openrouter')) LS.set('riddle_openai_base', BAKED_DEFAULTS.base);
+       else if(!curBase) LS.set('riddle_openai_base', BAKED_DEFAULTS.base);
+       else if(badBases.includes(curBase)) LS.set('riddle_openai_base', BAKED_DEFAULTS.base);
+    }
+    if(!curModel || badModels.includes(curModel)) LS.set('riddle_openai_model', BAKED_DEFAULTS.model);
+  }catch{}
+})();
+function getSettings(){
+  return {
+    key: LS.get('riddle_openai_key', BAKED_DEFAULTS.key),
+    base: (LS.get('riddle_openai_base','')||BAKED_DEFAULTS.base).trim().replace(/\/+$/,'') || BAKED_DEFAULTS.base,
+    model: LS.get('riddle_openai_model', BAKED_DEFAULTS.model).trim() || BAKED_DEFAULTS.model,
+    maxTokens: parseInt(LS.get('riddle_max_tokens','2000'),10)||2000,
+    memoryOn: LS.get('riddle_memory','1')!=='0',
+    tzOffset: parseFloat(LS.get('riddle_tz_offset','0'))||0
+  };
+}
+function saveSettings(o){
+  LS.set('riddle_openai_key', o.key.trim());
+  LS.set('riddle_openai_base', o.base.trim());
+  LS.set('riddle_openai_model', o.model.trim());
+  LS.set('riddle_max_tokens', String(o.maxTokens));
+  LS.set('riddle_memory', o.memoryOn?'1':'0');
+  LS.set('riddle_tz_offset', String(o.tzOffset));
+}
+
+/* ========= memory store (localStorage) ========= */
+const MEM_KEY='riddle_memories_v1';
+function loadMemories(){
+  try{ const a=JSON.parse(LS.get(MEM_KEY,'[]')); return Array.isArray(a)?a:[] }catch{return []}
+}
+function saveMemories(arr){ LS.set(MEM_KEY, JSON.stringify(arr.slice(-MAX_MEMORIES))) }
+function addMemory(entry){
+  const arr=loadMemories(); arr.push(entry);
+  if(arr.length>MAX_MEMORIES) arr.splice(0, arr.length-MAX_MEMORIES);
+  saveMemories(arr);
+}
+function spokenDate(id){
+  const s=getSettings();
+  const t = (id + s.tzOffset*3600)*1000;
+  const d=new Date(t);
+  const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const day=d.getUTCDate();
+  let suf="th"; if(day%10===1&&day!==11) suf="st"; else if(day%10===2&&day!==12) suf="nd"; else if(day%10===3&&day!==13) suf="rd";
+  const tod = (()=>{ const h=d.getUTCHours(); if(h<=4) return "in the small hours"; if(h<=11) return "in the morning"; if(h<=17) return "in the afternoon"; if(h<=21) return "in the evening"; return "late at night";})();
+  return `the ${day}${suf} of ${months[d.getUTCMonth()]}, ${tod}`;
+}
+function catalog(max=40){
+  const arr=loadMemories();
+  const lines=[], ids=[];
+  for(let i=arr.length-1, n=0; i>=0 && n<max; i--, n++){
+    const e=arr[i];
+    const gist = e.transcript.trim() ? oneLine(e.transcript,70) : `(reply: ${oneLine(e.reply,70)})`;
+    lines.push(`${n+1}. ${spokenDate(e.id)} — ${gist}`);
+    ids.push(e.id);
+  }
+  return {lines, ids};
+}
+function oneLine(s,max){ return s.split(/\s+/).join(' ').trim().slice(0,max) }
+function recentDialogue(n=6){
+  const arr=loadMemories().filter(e=>e.transcript.trim());
+  return arr.slice(-n).map(e=>[e.transcript, e.reply]);
+}
+
+/* ========= canvas setup ========= */
+const bgCanvas=document.getElementById('bgCanvas');
+const inkCanvas=document.getElementById('inkCanvas');
+const replyCanvas=document.getElementById('replyCanvas');
+const canvasArea=document.getElementById('canvasArea');
+const paperWrap=document.getElementById('paperWrap');
+const hint=document.getElementById('hint');
+const blot=document.getElementById('blot');
+const statusEl=document.getElementById('status');
+const statusText=document.getElementById('statusText');
+let W=0,H=0,DPR=1;
+let inkCtx, replyCtx, bgCtx;
+function resizeCanvases(){
+  const rect=canvasArea.getBoundingClientRect();
+  DPR = Math.min(window.devicePixelRatio||1, 2);
+  W = Math.max(320, Math.round(rect.width));
+  H = Math.max(360, Math.round(rect.height));
+  for(const c of [bgCanvas, inkCanvas, replyCanvas]){
+    c.width = Math.round(W*DPR);
+    c.height = Math.round(H*DPR);
+    c.style.width = W+'px';
+    c.style.height = H+'px';
+    const ctx=c.getContext('2d');
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    // reset font smoothing
+    ctx.imageSmoothingEnabled=true;
+  }
+  bgCtx=bgCanvas.getContext('2d');
+  inkCtx=inkCanvas.getContext('2d');
+  replyCtx=replyCanvas.getContext('2d');
+  drawBg();
+  redrawAll();
+  saveSnapshot(); // for memory conjure restore if needed
+}
+function drawBg(){
+  if(!bgCtx) return;
+  bgCtx.clearRect(0,0,W,H);
+  bgCtx.fillStyle='#fdfaf0';
+  bgCtx.fillRect(0,0,W,H);
+}
+window.addEventListener('resize', ()=>{ clearTimeout(window._rz); window._rz=setTimeout(resizeCanvases,120); });
+/* ensure fonts loaded before resize */
+document.fonts.ready.then(()=>resizeCanvases());
+if(document.readyState!=='loading') setTimeout(resizeCanvases,50);
+else window.addEventListener('DOMContentLoaded', resizeCanvases);
+
+/* ========= ink model ========= */
+let strokes=[]; // committed strokes [[{x,y,r}]]
+let curStroke=null; // current stroke
+let bbox=null; // {x0,y0,x1,y1}
+let eraserMode=false;
+let drawing=false;
+let idleTimer=null;
+let state='listening'; // listening | drinking | thinking | replying | lingering | fading | help | conjuring | memoryShown
+let savedImage=null; // ImageData for restore
+let replyState=null; // current reply animation
+let abortController=null;
+
+function bboxEmpty(b){ return !b || b.x1<b.x0 }
+function bboxAdd(b,x,y,pad){
+  if(!b) return {x0:x-pad,y0:y-pad,x1:x+pad,y1:y+pad};
+  return {x0:Math.min(b.x0,x-pad),y0:Math.min(b.y0,y-pad),x1:Math.max(b.x1,x+pad),y1:Math.max(b.y1,y+pad)}
+}
+function bboxUnion(a,b){
+  if(!a) return b; if(!b) return a;
+  return {x0:Math.min(a.x0,b.x0),y0:Math.min(a.y0,b.y0),x1:Math.max(a.x1,b.x1),y1:Math.max(a.y1,b.y1)}
+}
+function resetBbox(){
+  bbox=null;
+  for(const s of strokes) for(const p of s) bbox=bboxAdd(bbox,p.x,p.y,p.r+2);
+  if(curStroke) for(const p of curStroke) bbox=bboxAdd(bbox,p.x,p.y,p.r+2);
+}
+function hasInk(){ return strokes.length>0 || (curStroke && curStroke.length>0) }
+function clearInk(full){
+  strokes=[]; curStroke=null; bbox=null;
+  inkCtx.clearRect(0,0,W,H);
+  replyCtx.clearRect(0,0,W,H);
+  if(full) hint.classList.remove('hidden');
+}
+function saveSnapshot(){
+  try{ savedImage = inkCtx.getImageData(0,0, inkCanvas.width, inkCanvas.height); }catch{ savedImage=null; }
+}
+
+/* drawing helpers */
+function brushLine(ctx, x0,y0,x1,y1,r,color){
+  ctx.strokeStyle=color; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.lineWidth=r*2;
+  ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke();
+}
+function stamp(ctx,x,y,r,color){
+  ctx.fillStyle=color; ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+}
+
+/* full redraw (after resize) */
+function redrawAll(){
+  inkCtx.clearRect(0,0,W,H);
+  replyCtx.clearRect(0,0,W,H);
+  inkCtx.strokeStyle='#111'; inkCtx.lineCap='round'; inkCtx.lineJoin='round';
+  for(const s of strokes){
+    for(let i=1;i<s.length;i++){
+      const a=s[i-1], b=s[i];
+      brushLine(inkCtx,a.x,a.y,b.x,b.y, Math.min(b.r, a.r+1), '#0a0a0a');
+    }
+    if(s.length===1) stamp(inkCtx,s[0].x,s[0].y,s[0].r,'#0a0a0a');
+  }
+  if(curStroke){
+    for(let i=1;i<curStroke.length;i++){
+      const a=curStroke[i-1], b=curStroke[i];
+      brushLine(inkCtx,a.x,a.y,b.x,b.y, Math.min(b.r,a.r+1), '#0a0a0a');
+    }
+  }
+}
+
+/* ========= pointer handling ========= */
+function getPos(e){
+  const r=inkCanvas.getBoundingClientRect();
+  return { x: e.clientX - r.left, y: e.clientY - r.top, pressure: e.pressure||0.5, pointerType:e.pointerType, button:e.button, buttons:e.buttons };
+}
+function isEraserEvent(e){
+  if(eraserMode) return true;
+  // pen eraser: button 5 or eraser tool
+  // pointerType pen with button 2? Use heuristic: if e.pointerType==='pen' and e.button===5
+  return false;
+}
+inkCanvas.addEventListener('pointerdown', (e)=>{
+  if(state==='conjuring' || state==='memoryShown'){ dismissConjure(); return; }
+  if(state==='help'){ hideHelp(); return; }
+  if(state!=='listening' && state!=='lingering') {
+    if(state==='lingering'){ // tap to fade
+      startFading();
+      return;
+    }
+    return;
+  }
+  e.preventDefault();
+  inkCanvas.setPointerCapture(e.pointerId);
+  drawing=true;
+  hint.classList.add('hidden');
+  const p=getPos(e);
+  const r = eraserMode ? 18 : (2 + Math.round((p.pressure||0.5)*6));
+  if(eraserMode){
+    // erase immediately
+    eraseAt(p.x,p.y, r);
+  } else {
+    curStroke=[{x:p.x,y:p.y,r}];
+    bbox=bboxAdd(bbox,p.x,p.y,r+2);
+    stamp(inkCtx,p.x,p.y,r,'#0a0a0a');
+  }
+  resetIdle();
+});
+inkCanvas.addEventListener('pointermove', (e)=>{
+  if(!drawing) return;
+  e.preventDefault();
+  const p=getPos(e);
+  const r = eraserMode ? 18 : (2 + Math.round((p.pressure||0.5)*6));
+  if(eraserMode){
+    eraseAt(p.x,p.y,r);
+  } else {
+    if(!curStroke) curStroke=[];
+    const prev=curStroke[curStroke.length-1];
+    if(prev){
+      brushLine(inkCtx, prev.x, prev.y, p.x, p.y, Math.min(r, prev.r+1), '#0a0a0a');
+    } else stamp(inkCtx,p.x,p.y,r,'#0a0a0a');
+    curStroke.push({x:p.x,y:p.y,r});
+    bbox=bboxAdd(bbox,p.x,p.y,r+2);
+  }
+  resetIdle();
+});
+function endStroke(e){
+  if(!drawing) return;
+  drawing=false;
+  try{ inkCanvas.releasePointerCapture(e.pointerId); }catch{}
+  if(!eraserMode && curStroke && curStroke.length){
+    strokes.push(curStroke);
+  }
+  curStroke=null;
+  resetBbox();
+  resetIdle();
+}
+inkCanvas.addEventListener('pointerup', endStroke);
+inkCanvas.addEventListener('pointercancel', endStroke);
+inkCanvas.addEventListener('pointerleave', (e)=>{ if(drawing) endStroke(e); });
+
+function eraseAt(x,y,r){
+  // draw white over ink canvas
+  stamp(inkCtx,x,y,r,'#fdfaf0');
+  // also need to handle line between last erase point
+  if(eraseAt._lx!=null){
+    brushLine(inkCtx, eraseAt._lx, eraseAt._ly, x,y, r, '#fdfaf0');
+  }
+  eraseAt._lx=x; eraseAt._ly=y;
+  setTimeout(()=>{ eraseAt._lx=null; eraseAt._ly=null; }, 80);
+  // remove underlying stroke points within r
+  const r2=(r+2)*(r+2);
+  const kept=[];
+  for(const s of strokes){
+    let seg=[];
+    for(const p of s){
+      const dx=p.x-x, dy=p.y-y;
+      if(dx*dx+dy*dy <= r2){
+        if(seg.length) { kept.push(seg); seg=[]; }
+      } else seg.push(p);
+    }
+    if(seg.length) kept.push(seg);
+  }
+  strokes=kept.filter(s=>s.length);
+  resetBbox();
+}
+function resetIdle(){
+  if(idleTimer) clearTimeout(idleTimer);
+  if(state!=='listening') return;
+  if(!hasInk()) return;
+  idleTimer=setTimeout(()=>commitPage(), IDLE_COMMIT);
+}
+
+/* ========= question mark detection (simple) ========= */
+function looksLikeQuestionMark(){
+  // portable heuristic: single stroke, bbox tall, has dot near bottom
+  const all=[...strokes];
+  if(curStroke) all.push(curStroke);
+  if(all.length===0) return false;
+  // compute overall bbox
+  let bx=bbox; if(bboxEmpty(bx)) return false;
+  const w=bx.x1-bx.x0, h=bx.y1-bx.y0;
+  if(h<80 || w<20 || w>h*1.2) return false;
+  // need at least one small isolated dot near bottom center?
+  // simplified: check if last stroke is small dot
+  const last=all[all.length-1];
+  if(last && last.length<=4){
+    const dot=last[0];
+    // dot near bottom
+    if(dot.y > bx.y1 - h*0.35){
+      return true;
+    }
+  }
+  // also detect classic ? curve: bounding box tall and stroke count 1-2
+  if(all.length<=2 && h>90 && h/w>1.4) return true;
+  return false;
+}
+
+/* ========= commit & drinking ========= */
+async function commitPage(){
+  if(state!=='listening') return;
+  if(!hasInk()) return;
+  if(bboxEmpty(bbox)) return;
+  // erase check: fully white?
+  // skip if looks like ?
+  if(looksLikeQuestionMark()){
+    // consume ink
+    const bx=bbox;
+    inkCtx.clearRect(bx.x0-6,bx.y0-6,(bx.x1-bx.x0)+12,(bx.y1-bx.y0)+12);
+    clearInk(false);
+    hint.classList.remove('hidden');
+    showHelp();
+    return;
+  }
+  const s=getSettings();
+  if(!s.key){
+    // no oracle: excuse
+    state='drinking';
+    const region={...bbox};
+    await drinkAnimation(region);
+    const plan = planReply("The diary lies dormant: it found no oracle. Put an API key in Settings, then write again.", null);
+    state='replying';
+    await animateReply(plan, null);
+    lingerAndFade(plan.region);
+    return;
+  }
+  // snapshot bbox for PNG and drinking
+  const region={...bbox};
+  // build PNG crop
+  let pngBase64='';
+  try{ pngBase64 = await cropToBase64(region); }catch(e){ console.error(e); }
+  if(!pngBase64){ toast('Could not rasterize page'); state='listening'; return; }
+
+  // capture strokes for memory
+  const turnId = Math.floor(Date.now()/1000);
+  const turnStrokes = strokes.map(s=>s.map(p=>[p.x,p.y,p.r]));
+  // start drinking + oracle in parallel (oracle while drinking)
+  state='drinking';
+  const oraclePromise = callOracle(pngBase64, turnId);
+  await drinkAnimation(region);
+  // ink cleared
+  strokes=[]; curStroke=null; bbox=null;
+  inkCtx.clearRect(0,0,W,H);
+  replyCtx.clearRect(0,0,W,H);
+  hint.classList.add('hidden');
+  // thinking
+  state='thinking';
+  blot.classList.add('show');
+  statusText.textContent='The diary is thinking…';
+  statusEl.classList.add('show');
+  try{
+    const res = await oraclePromise;
+    blot.classList.remove('show'); statusEl.classList.remove('show');
+    handleOracleResult(res, {id:turnId, strokes:turnStrokes});
+  }catch(err){
+    blot.classList.remove('show'); statusEl.classList.remove('show');
+    const msg = err && err.message ? err.message : String(err);
+    const excuse = oracleExcuse(msg);
+    const plan = planReply(excuse, null);
+    state='replying';
+    await animateReply(plan, null);
+    lingerAndFade(plan.region);
+  }
+}
+function drinkAnimation(region){
+  return new Promise(resolve=>{
+    const STAGES=14;
+    let stage=0;
+    const baseImage = inkCtx.getImageData(0,0, inkCanvas.width, inkCanvas.height);
+    // we will progressively whiten pixels in region based on hash
+    function pxHash(x,y){
+      let h = (x*0x9E3779B1 ^ y*0x85EBCA6B)>>>0;
+      h ^= h>>>13; h = Math.imul(h, 0xC2B2AE35)>>>0; return (h ^ (h>>>16))>>>0;
+    }
+    function step(){
+      if(stage>=STAGES){ resolve(); return; }
+      // manipulate inkCanvas pixels in region
+      const scale=DPR;
+      const x0=Math.max(0, Math.floor((region.x0-2)*scale));
+      const y0=Math.max(0, Math.floor((region.y0-2)*scale));
+      const x1=Math.min(inkCanvas.width, Math.ceil((region.x1+2)*scale));
+      const y1=Math.min(inkCanvas.height, Math.ceil((region.y1+2)*scale));
+      const img=inkCtx.getImageData(x0,y0, x1-x0, y1-y0);
+      const d=img.data;
+      for(let y=0;y<img.height;y++){
+        for(let x=0;x<img.width;x++){
+          const idx=(y*img.width+x)*4;
+          // if not white-ish
+          const isInk = d[idx]<200 || d[idx+1]<200 || d[idx+2]<200;
+          if(isInk){
+            const gx = Math.floor(x0/scale)+x;
+            const gy = Math.floor(y0/scale)+y;
+            if( (pxHash(gx,gy) % STAGES) <= stage ){
+              d[idx]=253; d[idx+1]=250; d[idx+2]=240; d[idx+3]=255;
+            }
+          }
+        }
+      }
+      inkCtx.putImageData(img, x0,y0);
+      stage++;
+      setTimeout(step,70);
+    }
+    step();
+  });
+}
+function cropToBase64(region){
+  return new Promise((resolve,reject)=>{
+    const pad=20;
+    const x0=Math.max(0, Math.floor(region.x0-pad));
+    const y0=Math.max(0, Math.floor(region.y0-pad));
+    const x1=Math.min(W, Math.ceil(region.x1+pad));
+    const y1=Math.min(H, Math.ceil(region.y1+pad));
+    const cw=x1-x0, ch=y1-y0;
+    if(cw<=0||ch<=0) return resolve('');
+    const scaleDown = Math.max(1, Math.ceil(Math.max(cw,ch)/800));
+    // but ensure at least factor 2 as original? Use 1 for web
+    const f = Math.max(1, scaleDown);
+    const w=Math.floor(cw/f), h=Math.floor(ch/f);
+    const tmp=document.createElement('canvas');
+    tmp.width=w; tmp.height=h;
+    const tctx=tmp.getContext('2d');
+    tctx.fillStyle='#fdfaf0'; tctx.fillRect(0,0,w,h);
+    // need to composite current ink onto white? Our inkCanvas has transparent bg where no ink, so draw white first then ink?
+    // create source cropped image via offscreen
+    const src=document.createElement('canvas');
+    src.width=cw*DPR; src.height=ch*DPR;
+    const sctx=src.getContext('2d');
+    sctx.fillStyle='#ffffff'; sctx.fillRect(0,0,src.width,src.height);
+    sctx.drawImage(inkCanvas, x0*DPR, y0*DPR, cw*DPR, ch*DPR, 0,0, cw*DPR, ch*DPR);
+    // also draw bg? Not needed, paper is white
+    tctx.imageSmoothingEnabled=true;
+    tctx.imageSmoothingQuality='high';
+    tctx.drawImage(src,0,0,src.width,src.height,0,0,w,h);
+    // to grayscale: manipulate
+    const img=tctx.getImageData(0,0,w,h);
+    const d=img.data;
+    for(let i=0;i<d.length;i+=4){
+      const g = Math.round(0.299*d[i]+0.587*d[i+1]+0.114*d[i+2]);
+      d[i]=d[i+1]=d[i+2]=g;
+    }
+    tctx.putImageData(img,0,0);
+    // to base64
+    const url=tmp.toDataURL('image/png');
+    resolve(url.split(',')[1]);
+  });
+}
+
+/* ========= oracle streaming ========= */
+function buildTurnText(ctx){
+  if(!ctx.lines.length) return "Reply to what is written in the diary.";
+  return `Memory catalog (newest first):\n${ctx.lines.join('\n')}\n\nReply to what is written in the diary.`;
+}
+function clean(s){ let t=s.trim(); if(t.startsWith('"')) t=t.slice(1); if(t.endsWith('"')) t=t.slice(0,-1); return t; }
+function stripDirectives(s){ if(!s.includes(SHOW_OPEN)) return s; let out=''; let rest=s; while(true){ const o=rest.indexOf(SHOW_OPEN); if(o===-1){ out+=rest; break; } out+=rest.slice(0,o); const c=rest.indexOf(SHOW_CLOSE, o); if(c===-1) break; rest=rest.slice(c+1); } return out.split(/\s+/).join(' ').trim(); }
+function sentenceCut(text, from){
+  const tail=text.slice(from); let cut=null;
+  for(let i=0;i<tail.length;i++){ const ch=tail[i]; if(ch==='.'||ch==='!'||ch==='?'||ch==='\u2026'){ const end=i+1; const nxt=tail[end]; if(nxt==null||/\s/.test(nxt)){ if(end>=4) cut=from+end; } } }
+  return cut;
+}
+class StreamParser{
+  constructor(ids){ this.delivered=0; this.sentinel=null; this.routeChecked=false; this.showed=false; this.emittedAny=false; this.ids=ids; }
+  advance(full,done){
+    const out=[];
+    if(this.sentinel===null){ const idx=full.indexOf(SENTINEL); if(idx!==-1) this.sentinel=idx; }
+    const effective = this.sentinel!==null ? this.sentinel : full.length;
+    if(!this.routeChecked){
+      const lead = full.slice(this.delivered, effective).trimStart();
+      if(lead.startsWith(SHOW_OPEN)){
+        const close=lead.indexOf(SHOW_CLOSE);
+        if(close===-1){ if(!done) return out; out.push({err:"unfinished conjuring directive"}); return out; }
+        const inner=lead.slice(1,close);
+        const m=inner.toLowerCase().replace(/^show\s*[:\s]*/,'').trim();
+        const n=parseInt(m,10);
+        this.routeChecked=true; this.emittedAny=true; this.delivered=effective;
+        const id = (n&& n>=1 && this.ids[n-1]) ? this.ids[n-1] : null;
+        if(id!=null) out.push({show:id}); else out.push({err:`the diary lost that page (${inner})`});
+      } else if(lead===''){
+        if(!done) return out;
+        this.routeChecked=true;
+      } else this.routeChecked=true;
+    }
+    if(this.delivered < effective){
+      const cut=sentenceCut(full.slice(0,effective), this.delivered);
+      if(cut!=null){
+        const chunk=stripDirectives(clean(full.slice(this.delivered, cut)));
+        if(chunk) { this.emittedAny=true; out.push({ink:chunk}); }
+        this.delivered=cut;
+      }
+    }
+    if(done){
+      if(this.delivered < effective){
+        const rest=stripDirectives(clean(full.slice(this.delivered, effective).trim()));
+        if(rest){ this.emittedAny=true; out.push({ink:rest}); }
+        this.delivered=effective;
+      }
+      if(this.sentinel!==null){
+        const t=full.slice(this.sentinel+1).trim();
+        if(t) out.push({transcript:t});
+      }
+      if(!this.emittedAny) out.push({err:"empty reply"});
+    }
+    return out;
+  }
+}
+function oracleExcuse(e){
+  if(e.includes('no oracle')) return "The diary lies dormant: it found no oracle. Put an API key in Settings, then open me again.";
+  if(e.includes('401')||e.includes('403')) return "The oracle refused the diary's key. Check your API key in Settings.";
+  if(e.includes('503')||e.includes('529')||e.includes('overloaded')||e.includes('all models busy')) return "The oracle is overwhelmed — too many whispers at once. Wait a moment and write again.";
+  if(e.match(/http \d+/)) { const code=(e.match(/http \d+/)||['an error'])[0]; return `The oracle rejected the diary's plea (${code}). Try again or switch model in Settings.`; }
+  if(e.includes('request failed')||e.includes('timed out')||e.includes('Failed to fetch')||e.includes('NetworkError')) return "The diary cannot reach its oracle. Is the device connected to the internet? Check Base URL and key.";
+  if(e.includes('empty reply')) return "The spirit read your words but said nothing. Write again.";
+  return "The ink blurred before it could answer. Write again.";
+}
+async function callOracle(pngBase64, turnId){
+  const s=getSettings();
+  const remember=s.memoryOn;
+  const system = remember ? PERSONA+MEMORY_PROTOCOL : PERSONA;
+  const ctx = remember ? catalog(40) : {lines:[], ids:[]};
+  const history = remember ? recentDialogue(6) : [];
+  let historyMsgs='';
+  for(const [t,r] of history){
+    historyMsgs += `{"role":"user","content":${JSON.stringify("(an earlier page) "+t)}},{"role":"assistant","content":${JSON.stringify(r)}},`;
+  }
+  const userText = ctx.lines.length ? `Memory catalog (newest first):\n${ctx.lines.join('\n')}\n\nReply to what is written in the diary.` : "Reply to what is written in the diary.";
+  const bodyBase = {
+    model: s.model,
+    stream: true,
+    max_tokens: s.maxTokens,
+    messages: [
+      {role:"system", content: system},
+      // history will be injected via raw string to keep ordering; but we can build array
+    ]
+  };
+  // build messages array properly
+  const messages=[{role:"system", content: system}];
+  for(const [t,r] of history){ messages.push({role:"user", content:"(an earlier page) "+t}); messages.push({role:"assistant", content:r}); }
+  messages.push({role:"user", content:[
+    {type:"text", text:userText},
+    {type:"image_url", image_url:{url:"data:image/png;base64,"+pngBase64}}
+  ]});
+  // try primary model + fallbacks on 503/429/500/model_not_found - Groq free tier often 503
+  const tryModels = [s.model, ...BAKED_DEFAULTS.altModels].filter((v,i,a)=>v && a.indexOf(v)===i);
+  const url = s.base.replace(/\/+$/,'') + '/chat/completions';
+  let resp=null, lastErr='';
+  for(const m of tryModels){
+    const payload = JSON.stringify({model:m, stream:true, max_tokens:s.maxTokens, messages});
+    const ac=new AbortController(); abortController=ac;
+    try{
+      resp=await fetch(url, {method:'POST', headers:{'Authorization':`Bearer ${s.key}`,'Content-Type':'application/json'}, body:payload, signal:ac.signal});
+    }catch(e){ lastErr='request failed: '+e.message; continue; }
+    if(resp.ok) { if(m!==s.model){ LS.set('riddle_openai_model', m); toast('Switched to '+m+' (previous overloaded)'); } s.model=m; break; }
+    const txt=await resp.text().catch(()=>'');
+    lastErr=`http ${resp.status}: ${txt.slice(0,400)}`;
+    const retryable = resp.status===503 || resp.status===429 || resp.status===500 || txt.includes('model_not_found') || txt.includes('does not exist');
+    if(retryable && m!==tryModels[tryModels.length-1]) { console.warn('oracle retry', m, lastErr); await new Promise(r=>setTimeout(r, 700)); continue; }
+    throw new Error(lastErr);
+  }
+  if(!resp || !resp.ok) throw new Error(lastErr || 'http 503: all models busy, try again');
+  const ac2=abortController; // for reader below
+  const reader=resp.body.getReader();
+  const decoder=new TextDecoder();
+  let buf='', acc='', parser=new StreamParser(ctx.ids);
+  const events=[]; // collected Ink chunks + possible Show
+  let transcript=null;
+  let firstChunkTime=null; const t0=Date.now();
+  // helper to process SSE lines
+  let doneReading=false;
+  while(!doneReading){
+    const {value, done} = await reader.read();
+    if(done) break;
+    buf+=decoder.decode(value,{stream:true});
+    let lines=buf.split('\n'); buf=lines.pop();
+    for(let line of lines){
+      line=line.trim();
+      if(!line.startsWith('data:')) continue;
+      const data=line.slice(5).trim();
+      if(data==='[DONE]'){ doneReading=true; break; }
+      try{
+        const j=JSON.parse(data);
+        const delta=j.choices && j.choices[0] && j.choices[0].delta && j.choices[0].delta.content || '';
+        if(delta){ acc+=delta; const evs=parser.advance(acc,false); for(const ev of evs){ if(ev.ink){ if(firstChunkTime===null) firstChunkTime=Date.now(); events.push(ev); } else if(ev.show){ events.push(ev); } else if(ev.transcript){ transcript=ev.transcript; } else if(ev.err) throw new Error(ev.err); } }
+      }catch(e){
+        if(e.message && e.message.includes('the diary')) throw e;
+        // ignore parse errors
+      }
+    }
+  }
+  // flush remaining buffer line?
+  if(buf.trim().startsWith('data:')){
+    const data=buf.trim().slice(5).trim();
+    if(data && data!=='[DONE]'){
+      try{ const j=JSON.parse(data); const delta=j.choices?.[0]?.delta?.content||''; if(delta) acc+=delta; }catch{}
+    }
+  }
+  // final flush
+  const finalEvs=parser.advance(acc,true);
+  for(const ev of finalEvs){ if(ev.ink) events.push(ev); else if(ev.show) events.push(ev); else if(ev.transcript) transcript=ev.transcript; else if(ev.err && events.length===0) throw new Error(ev.err); }
+  // if no events but transcript only, still need transcript
+  return {events, transcript, acc, firstMs: firstChunkTime? firstChunkTime - t0 : null, ids:ctx.ids};
+}
+
+// incremental streaming variant for live ink while drinking? For simplicity we used await full, but we now want live animation overlapping drinking.
+// For tablet single file we already drink first then think; so full await is okay. But to mimic sentence streaming, handle events incrementally in handleOracleResult.
+function handleOracleResult(res, turnMeta){
+  const {events, transcript} = res;
+  // check for Show
+  const showEv = events.find(e=>e.show);
+  if(showEv){
+    // need to conjure memory
+    const id=showEv.show;
+    const mems=loadMemories(); const entry=mems.find(m=>m.id===id);
+    if(!entry){
+      const plan=planReply(oracleExcuse('lost page'), null);
+      state='replying'; animateReply(plan,null).then(()=>lingerAndFade(plan.region));
+      return;
+    }
+    // save transcript for memory? Even show turns we store? Original stores only if not failed and reply non-empty. For show, reply is empty, so not stored.
+    // conjure
+    conjureMemory(entry);
+    // still store transcript? Original turn's transcript is stored if turn succeeds, but show doesn't produce reply text. For simplicity, if transcript exists, store as memory with empty reply? We'll store if transcript provided.
+    if(transcript){
+      addMemory({id:turnMeta.id, transcript, reply:'', thumb:''});
+    }
+    return;
+  }
+  const texts = events.filter(e=>e.ink).map(e=>e.ink);
+  const fullReply = texts.join(' ');
+  if(!fullReply.trim()){
+    const plan=planReply(oracleExcuse('empty reply'), null);
+    state='replying'; animateReply(plan,null).then(()=>lingerAndFade(plan.region));
+    return;
+  }
+  // store memory before animating? Original stores after reply completes; we store now
+  if(getSettings().memoryOn && transcript!==null){
+    // decimate not needed; we have thumb via png? We'll store without thumb
+    addMemory({id:turnMeta.id, transcript, reply:fullReply, thumb:''});
+  } else if(getSettings().memoryOn && transcript===null){
+    // if model forgot sentinel, use fullReply length check: still store with empty transcript? Save with placeholder
+    addMemory({id:turnMeta.id, transcript:'', reply:fullReply, thumb:''});
+  }
+  const plan=planReply(fullReply, null);
+  state='replying';
+  animateReply(plan, null).then(()=>lingerAndFade(plan.region));
+}
+
+/* ========= reply handwriting animation ========= */
+function wrapText(text, maxW){
+  // use replyCtx measure with Dancing Script
+  replyCtx.font='400 28px "Dancing Script"';
+  const words=text.split(/\s+/);
+  const lines=[]; let cur='';
+  for(const w of words){
+    const cand = cur ? cur+' '+w : w;
+    if(replyCtx.measureText(cand).width <= maxW || !cur) cur=cand;
+    else { lines.push(cur); cur=w; }
+  }
+  if(cur) lines.push(cur);
+  // handle explicit newlines
+  const final=[]; for(const l of text.split('\n')){ if(l==='') final.push(''); else final.push(...wrapText(l, maxW)); } // avoid double
+  // Actually we already split; if original had newlines, we need to respect
+  if(text.includes('\n')){
+    const out=[]; for(const para of text.split('\n')){ if(para.trim()===''){ out.push(''); continue; } const wl=wrapText(para, maxW); out.push(...wl); } return out;
+  }
+  return lines;
+}
+function planReply(text, yStart){
+  const maxW = Math.max(200, W - 90); // margin approx
+  // use wrap
+  // For accuracy, set font before measure
+  replyCtx.font='400 30px "Dancing Script"';
+  replyCtx.fillStyle='#0a0a0a';
+  const lines = (()=>{ const out=[]; for(const para of text.split('\n')){ const words=para.split(/\s+/).filter(Boolean); if(words.length===0){ out.push(''); continue; } let cur=''; for(const w of words){ const cand=cur?cur+' '+w:w; if(replyCtx.measureText(cand).width <= maxW || !cur) cur=cand; else { out.push(cur); cur=w; } } if(cur) out.push(cur); } return out; })();
+  const lineH=38;
+  const totalH=lineH*lines.length;
+  let y = yStart!=null ? yStart : Math.max(24, Math.floor((H - totalH)/2.2));
+  // ensure inside
+  if(y<18) y=18;
+  const chars=[];
+  let region={x0:W,y0:H,x1:0,y1:0};
+  const strokesForAnim=[];
+  // we will generate per-line image of text then progressively reveal via clipping.
+  // Simpler: store lines with positions, animate by drawing line progressively.
+  const lineInfos=lines.map((ln,idx)=>{
+    const ty = y + idx*lineH;
+    // center line
+    const w = replyCtx.measureText(ln).width;
+    const x = Math.max(16, (W - w)/2);
+    region.x0=Math.min(region.x0, x-6); region.y0=Math.min(region.y0, ty-28); region.x1=Math.max(region.x1, x+w+6); region.y1=Math.max(region.y1, ty+10);
+    return {text:ln, x, y:ty};
+  });
+  return {lines:lineInfos, region, lineH, text};
+}
+let _redMode=false;
+function animateReply(plan, onProgress){
+  return new Promise(resolve=>{
+    let idx=0;
+    let charIdx=0;
+    replyCtx.clearRect(0,0,W,H);
+    replyCtx.font='400 30px "Dancing Script"';
+    replyCtx.fillStyle=_redMode?'#5a0a0a':'#111';
+    replyCtx.textBaseline='alphabetic';
+    // slight wobble seeds per line
+    function drawStep(){
+      if(idx>=plan.lines.length){ resolve(); return; }
+      const line=plan.lines[idx];
+      const full=line.text;
+      // draw up to charIdx inclusive
+      const sub=full.slice(0, charIdx+1);
+      // clear line area and redraw sub
+      // we clear whole reply canvas incrementally? Instead draw sub over white with same position
+      // To avoid ghost, we pre-clear line band
+      const w=replyCtx.measureText(full).width;
+      // redraw background white for band then text sub
+      // but replyCanvas is transparent; just draw text sub (overwrites)
+      // For handwriting effect, jitter each character slightly
+      replyCtx.clearRect(line.x-2, line.y-30, w+4, 36);
+      // subtle wobble per char: offset y by small random
+      let x=line.x;
+      for(let i=0;i<sub.length;i++){
+        const ch=sub[i];
+        const chW=replyCtx.measureText(ch).width;
+        const wob = Math.sin((idx*7+i)*1.3)*1.2;
+        replyCtx.fillText(ch, x, line.y + wob);
+        x+=chW;
+      }
+      charIdx++;
+      if(charIdx >= full.length){
+        idx++; charIdx=0;
+        setTimeout(drawStep, 90);
+      } else {
+        // variable timing: slower for punctuation
+        const last=sub[sub.length-1];
+        const delay = /[.,!?…]/.test(last) ? 220 : 32 + Math.random()*28;
+        setTimeout(drawStep, delay);
+      }
+    }
+    drawStep();
+  });
+}
+function lingerAndFade(region){
+  state='lingering';
+  const chars = region ? ((region.x1-region.x0)*(region.y1-region.y0))/800 : 400;
+  const linger = Math.min(20000, 4000 + chars*2);
+  setTimeout(()=>startFading(region), linger);
+  // also allow tap to fade early
+  lingFregion=region;
+}
+let lingFregion=null;
+function startFading(region){
+  if(state!=='lingering' && state!=='replying') return;
+  state='fading';
+  const STAGES=10;
+  let stage=0;
+  const rx = region || lingFregion || {x0:0,y0:0,x1:W,y1:H};
+  function step(){
+    if(stage>=STAGES){
+      replyCtx.clearRect(0,0,W,H);
+      // full refresh visual: clear ink too (faded away)
+      // keep paper, but clear lingering hint
+      statusEl.classList.remove('show'); blot.classList.remove('show');
+      state='listening';
+      lingFregion=null;
+      // keep hint hidden if we have just replied? Let fade keep hint hidden until next clear
+      return;
+    }
+    // fade replyCanvas by reducing alpha in region
+    // Instead of pixel hash, use global alpha fade
+    const alpha = 1 - (stage+1)/STAGES;
+    // capture image, fade via compositing white
+    // Simple: draw white rect with increasing opacity over region? But we want dissolve pattern.
+    // Approximate dissolve by random erasing
+    const sx=Math.floor(rx.x0), sy=Math.floor(rx.y0), sw=Math.ceil(rx.x1-rx.x0), sh=Math.ceil(rx.y1-rx.y0);
+    // use pixel manipulation on replyCanvas
+    try{
+      const scale=DPR;
+      const x0=Math.max(0, Math.floor(sx*scale)), y0=Math.max(0, Math.floor(sy*scale)), w=Math.min(replyCanvas.width-x0, Math.ceil(sw*scale)), h=Math.min(replyCanvas.height-y0, Math.ceil(sh*scale));
+      if(w>0&&h>0){
+        const img=replyCtx.getImageData(x0/scale,y0/scale,w/scale,h/scale); // but getImageData expects device pixels? Simplified: use unscaled coords with DPR transform already applied? Actually canvas context is scaled, so getImageData uses device pixels coordinates still scaled.
+        // Instead use raw canvas width coords
+        const img2=replyCtx.getImageData(0,0,0,0); // placeholder
+      }
+    }catch{}
+    // Fallback: global alpha fade via clearing and redrawing with lower alpha (we'll just reduce opacity by clearing partially)
+    // Simpler: set globalAlpha and redraw? We'll just use CSS-like fade: clear and redraw text with alpha
+    // But easiest: just reduce opacity by drawing white with alpha
+    replyCtx.fillStyle=`rgba(253,250,240,${0.15})`;
+    // dissolve pattern via random rects
+    for(let i=0;i<80;i++){
+      const rx2 = rx.x0 + Math.random()*(rx.x1-rx.x0);
+      const ry2 = rx.y0 + Math.random()*(rx.y1-rx.y0);
+      const rw= 8+Math.random()*18, rh=8+Math.random()*10;
+      replyCtx.fillRect(rx2,ry2,rw,rh);
+    }
+    stage++;
+    setTimeout(step,80);
+  }
+  step();
+}
+
+/* ========= conjure ========= */
+let conjureSaved=null;
+function conjureMemory(entry){
+  // snapshot current paper (save ink+reply)
+  conjureSaved = {
+    ink: inkCanvas.toDataURL(),
+    reply: replyCanvas.toDataURL()
+  };
+  // clear canvases
+  inkCtx.clearRect(0,0,W,H);
+  replyCtx.clearRect(0,0,W,H);
+  hint.classList.add('hidden');
+  state='conjuring';
+  // draw memory: date + transcript? For tablet version, we store no stroke image, so we simulate conjure by rendering transcript as faded handwriting and reply as faded.
+  const dateStr = spokenDate(entry.id);
+  replyCtx.save();
+  replyCtx.globalAlpha=0.55;
+  replyCtx.fillStyle='#6b5a2a';
+  replyCtx.font='italic 13px "Crimson Pro"';
+  replyCtx.textAlign='center';
+  replyCtx.fillText(dateStr, W/2, 34);
+  replyCtx.textAlign='left';
+  // writer's hand (transcript) in darker faded ink - use a handwritten-like serif?
+  replyCtx.fillStyle='#3a3326';
+  replyCtx.font='400 22px "Dancing Script"';
+  const lines=entry.transcript ? (()=>{ const maxW=W-40; const paras=entry.transcript.split('\n'); const out=[]; replyCtx.font='400 22px "Dancing Script"'; for(const para of paras){ let cur=''; for(const w of para.split(/\s+/).filter(Boolean)){ const cand=cur?cur+' '+w:w; if(replyCtx.measureText(cand).width<=maxW||!cur) cur=cand; else{ out.push(cur); cur=w; } } if(cur) out.push(cur); } return out; })() : [];
+  let y=68;
+  for(const ln of lines){ const w=replyCtx.measureText(ln).width; const x=(W-w)/2; replyCtx.fillText(ln, x, y); y+=28; if(y>H-80) break; }
+  // Tom's old reply below, faded
+  if(entry.reply){
+    y+=22;
+    replyCtx.fillStyle='#4a3f2e';
+    replyCtx.font='400 20px "Dancing Script"';
+    const maxW=W-50;
+    const paras=entry.reply.split('\n'); const out2=[];
+    for(const para of paras){ let cur=''; for(const w of para.split(/\s+/).filter(Boolean)){ const cand=cur?cur+' '+w:w; if(replyCtx.measureText(cand).width<=maxW||!cur) cur=cand; else{ out2.push(cur); cur=w; } } if(cur) out2.push(cur); }
+    for(const ln of out2){ const w=replyCtx.measureText(ln).width; const x=(W-w)/2; replyCtx.fillText(ln, x, y); y+=26; if(y>H-20) break; }
+  }
+  // also if we had thumb image, draw it
+  if(entry.thumb){
+    const img=new Image(); img.onload=()=>{ replyCtx.globalAlpha=0.45; const iw=W-80, ih=(img.height/img.width)*iw; replyCtx.drawImage(img, 40, 70, iw, ih); replyCtx.restore(); };
+    img.src=entry.thumb;
+  } else replyCtx.restore();
+  // conjuring animation: fade in quickly then hold
+  replyCtx.globalAlpha=1;
+  state='memoryShown';
+  statusText.textContent='Tap to return';
+  statusEl.classList.add('show');
+  // tapping anywhere returns
+  setTimeout(()=>{ /* keep until tap */ }, 400);
+}
+function dismissConjure(){
+  if(state!=='memoryShown' && state!=='conjuring') return;
+  statusEl.classList.remove('show');
+  replyCtx.clearRect(0,0,W,H);
+  inkCtx.clearRect(0,0,W,H);
+  if(conjureSaved){
+    const inkImg=new Image(), repImg=new Image();
+    let loaded=0; function check(){ loaded++; if(loaded===2){ state='listening'; } }
+    inkImg.onload=()=>{ inkCtx.drawImage(inkImg,0,0,W,H); check(); };
+    repImg.onload=()=>{ replyCtx.drawImage(repImg,0,0,W,H); check(); };
+    inkImg.src=conjureSaved.ink; repImg.src=conjureSaved.reply;
+    // redraw strokes model still empty? We already cleared strokes; keep them empty so new writing starts fresh
+    // but keep visual restore
+    inkImg.onerror=check; repImg.onerror=check;
+    conjureSaved=null;
+  } else {
+    state='listening';
+  }
+  hint.classList.add('hidden');
+}
+
+/* ========= UI wiring ========= */
+const settingsOverlay=document.getElementById('settingsOverlay');
+const helpOverlay=document.getElementById('helpOverlay');
+const memoryOverlay=document.getElementById('memoryOverlay');
+document.getElementById('settingsBtn').addEventListener('click', ()=>{
+  const s=getSettings();
+  document.getElementById('apiKey').value=s.key;
+  document.getElementById('apiBase').value=LS.get('riddle_openai_base','');
+  document.getElementById('apiModel').value=LS.get('riddle_openai_model','');
+  document.getElementById('apiMaxTokens').value=s.maxTokens;
+  document.getElementById('memoryOn').checked=s.memoryOn;
+  document.getElementById('tzOffset').value=s.tzOffset;
+  settingsOverlay.classList.add('show');
+});
+document.getElementById('settingsCancel').addEventListener('click', ()=>settingsOverlay.classList.remove('show'));
+document.getElementById('settingsSave').addEventListener('click', ()=>{
+  saveSettings({
+    key: document.getElementById('apiKey').value,
+    base: document.getElementById('apiBase').value.trim() || 'https://api.openai.com/v1',
+    model: document.getElementById('apiModel').value.trim() || 'gpt-4o-mini',
+    maxTokens: parseInt(document.getElementById('apiMaxTokens').value,10)||2000,
+    memoryOn: document.getElementById('memoryOn').checked,
+    tzOffset: parseFloat(document.getElementById('tzOffset').value)||0
+  });
+  toast('Settings saved');
+  settingsOverlay.classList.remove('show');
+});
+document.getElementById('helpBtn').addEventListener('click', showHelp);
+document.getElementById('helpClose').addEventListener('click', hideHelp);
+function showHelp(){ helpOverlay.classList.add('show'); }
+function hideHelp(){ helpOverlay.classList.remove('show'); }
+document.getElementById('memoryBtn').addEventListener('click', ()=>{
+  const list=document.getElementById('memoryList');
+  const arr=loadMemories().slice().reverse();
+  list.innerHTML='';
+  if(!arr.length) list.innerHTML='<div style="padding:16px;text-align:center;color:#8a7a5a;font-family:Crimson Pro,serif">No memories yet — write a page first.</div>';
+  else for(const e of arr){
+    const div=document.createElement('div'); div.className='memoryItem';
+    div.innerHTML=`<span class="gist">${escapeHtml(oneLine(e.transcript||e.reply,60)||'(empty)')}</span><span class="date">${escapeHtml(spokenDate(e.id))}</span>`;
+    div.addEventListener('click', ()=>{ memoryOverlay.classList.remove('show'); conjureMemory(e); });
+    list.appendChild(div);
+  }
+  memoryOverlay.classList.add('show');
+});
+document.getElementById('memoryClose').addEventListener('click', ()=>memoryOverlay.classList.remove('show'));
+document.getElementById('undoBtn').addEventListener('click', ()=>{
+  if(state==='memoryShown'||state==='conjuring'){ dismissConjure(); return; }
+  if(abortController) try{abortController.abort()}catch{}
+  blot.classList.remove('show'); statusEl.classList.remove('show');
+  clearInk(true); strokes=[]; bbox=null; state='listening';
+  if(idleTimer) clearTimeout(idleTimer);
+});
+document.getElementById('eraserBtn').addEventListener('click', (e)=>{
+  eraserMode=!eraserMode;
+  e.currentTarget.classList.toggle('active', eraserMode);
+  e.currentTarget.textContent = eraserMode ? 'Pen' : 'Eraser';
+});
+document.getElementById('forgetBtn').addEventListener('click', ()=>{
+  if(confirm('Forget all remembered pages on this device?')){ LS.del(MEM_KEY); toast('Memories forgotten'); }
+});
+document.getElementById('testBtn').addEventListener('click', async ()=>{
+  const s=getSettings();
+  // save current inputs first
+  saveSettings({
+    key: document.getElementById('apiKey').value,
+    base: document.getElementById('apiBase').value.trim() || 'https://api.openai.com/v1',
+    model: document.getElementById('apiModel').value.trim() || 'gpt-4o-mini',
+    maxTokens: parseInt(document.getElementById('apiMaxTokens').value,10)||2000,
+    memoryOn: document.getElementById('memoryOn').checked,
+    tzOffset: parseFloat(document.getElementById('tzOffset').value)||0
+  });
+  const key=document.getElementById('apiKey').value.trim();
+  if(!key){ toast('Enter an API key first'); return; }
+  toast('Testing…');
+  try{
+    // send a tiny white image with text "hello"
+    const tmp=document.createElement('canvas'); tmp.width=400; tmp.height=120;
+    const c=tmp.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,400,120); c.fillStyle='#000'; c.font='28px serif'; c.fillText('Hello Tom', 20, 70);
+    const b64=tmp.toDataURL('image/png').split(',')[1];
+    const res=await callOracle(b64, Math.floor(Date.now()/1000));
+    const txt=res.events.map(e=>e.ink||'').join(' ')||'(no ink)';
+    toast('Oracle replied: '+txt.slice(0,80));
+  }catch(err){ toast('Test failed: '+ (err.message||err).slice(0,120)); }
+});
+for(const ov of [settingsOverlay, helpOverlay, memoryOverlay]){
+  ov.addEventListener('click', (e)=>{ if(e.target===ov) ov.classList.remove('show'); });
+}
+function openCover(){
+  const c=document.getElementById('cover');
+  c.classList.add('open');
+  // soft ink bleed sound proxy: haptic
+  try{ navigator.vibrate(20); }catch{}
+  setTimeout(()=>{ hint.classList.remove('hidden'); }, 400);
+}
+function showAnagram(){
+  // Film-accurate: Tom writes "Tom Marvolo Riddle" then letters physically rearrange on the parchment to "I am Lord Voldemort"
+  try{ navigator.vibrate([30,40,30]); }catch{}
+  // hide ams popup, use parchment
+  document.getElementById('anagram').classList.remove('show');
+  // clear and animate on replyCanvas
+  const from = "TOM MARVOLO RIDDLE";
+  const to   = "I AM LORD VOLDEMORT";
+  const cx = W/2, cy = H/2;
+  // prepare letters: we animate only A-Z, spaces stay as gaps
+  const fromLetters = from.split('');
+  const toLetters = to.split('');
+  // measure widths to center
+  replyCtx.font='600 26px "Crimson Pro"';
+  const fromW = replyCtx.measureText(from).width;
+  const toW = replyCtx.measureText(to).width;
+  // build objects with start and target positions
+  const startX = cx - fromW/2;
+  const targetX = cx - toW/2;
+  // map each CHAR (including spaces) - for film we keep exact char count mismatch handled by mapping letters only
+  // Simpler: animate each *letter* (ignore spaces) from its start position to target letter position
+  let sx = startX;
+  const letters = [];
+  // compute start positions per char
+  const startPos = [];
+  for(let i=0;i<fromLetters.length;i++){
+    const ch = fromLetters[i];
+    const w = replyCtx.measureText(ch).width;
+    startPos.push({ch, x: sx, y: cy - 18});
+    sx += w;
+  }
+  let tx = targetX;
+  const targetPos = [];
+  for(let i=0;i<toLetters.length;i++){
+    const ch = toLetters[i];
+    const w = replyCtx.measureText(ch).width;
+    targetPos.push({ch, x: tx, y: cy + 32});
+    tx += w;
+  }
+  // Build letter objects for A-Z only: match by letter identity in order (Tom's trick)
+  // We pair each non-space letter from -> to by sorted order? Film pairs sequentially around, easiest: pair by index of letters ignoring spaces
+  const sLetters = from.replace(/ /g,'').split('');
+  const tLetters = to.replace(/ /g,'').split('');
+  // Need positions for letters-only
+  const sLetterPos = from.replace(/ /g,'').split('').map((_,i)=>{
+    // find i-th non-space char in startPos
+    let cnt=-1;
+    for(let p of startPos){ if(p.ch!==' '){cnt++; if(cnt===i) return p; } }
+  });
+  const tLetterPos = to.replace(/ /g,'').split('').map((_,i)=>{
+    let cnt=-1;
+    for(let p of targetPos){ if(p.ch!==' '){cnt++; if(cnt===i) return p; } }
+  });
+  for(let i=0;i<sLetters.length;i++){
+    letters.push({ch: sLetters[i], sx: sLetterPos[i].x, sy: sLetterPos[i].y, tx: tLetterPos[i].x, ty: tLetterPos[i].y});
+  }
+  // initial write: "Tom Marvolo Riddle" appears centered
+  replyCtx.clearRect(0,0,W,H);
+  inkCtx.clearRect(0,0,W,H);
+  state='memoryShown';
+  statusText.textContent='The ink shifts…';
+  statusEl.classList.add('show');
+  replyCtx.textAlign='left';
+  replyCtx.textBaseline='alphabetic';
+  // single font for entire sequence - no change
+  const anagramFont='600 26px "Crimson Pro", serif';
+  let p = 0;
+  function writeFrom(){
+    if(p>=letters.length){ setTimeout(rearrange, 700); return; }
+    const L=letters[p];
+    replyCtx.fillStyle='#111';
+    replyCtx.font=anagramFont;
+    replyCtx.fillText(L.ch, L.sx, L.sy);
+    p++;
+    setTimeout(writeFrom, 85);
+  }
+  writeFrom();
+  function rearrange(){
+    const duration=1400;
+    const start=performance.now();
+    const anagramFont='600 26px "Crimson Pro", serif';
+    function frame(now){
+      const t=Math.min(1, (now-start)/duration);
+      const ease = 1 - Math.pow(1 - t, 3);
+      replyCtx.clearRect(0,0,W,H);
+      replyCtx.font=anagramFont;
+      replyCtx.textAlign='left';
+      replyCtx.textBaseline='alphabetic';
+      for(let L of letters){
+        const x = L.sx + (L.tx - L.sx)*ease;
+        const y = L.sy + (L.ty - L.sy)*ease;
+        replyCtx.fillStyle= ease>0.96 ? '#5a1010' : '#111';
+        replyCtx.fillText(L.ch, x, y);
+      }
+      if(t<1) requestAnimationFrame(frame);
+      else {
+        // hold final, then fade
+        replyCtx.clearRect(0,0,W,H);
+        replyCtx.fillStyle='#5a1010';
+        replyCtx.font='600 26px "Crimson Pro"';
+        replyCtx.textAlign='center';
+        replyCtx.fillText(to, cx, cy+32);
+        replyCtx.textAlign='left';
+        replyCtx.font='400 14px "Crimson Pro"';
+        replyCtx.fillStyle='rgba(90,16,16,0.55)';
+        replyCtx.fillText('— Lord Voldemort', cx - replyCtx.measureText('— Lord Voldemort').width/2, cy+58);
+        setTimeout(()=>{
+          statusEl.classList.remove('show');
+          // keep on screen until tap dissolves
+        }, 800);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+}
+function maybeAnagramTrigger(transcript, reply){
+  const t=(transcript||'').toLowerCase();
+  const r=(reply||'').toLowerCase();
+  const triggers=['who are you','what is your name','whats your name','show me who you are','tom marvolo','lord voldemort','i am lord','anagram','your real name'];
+  if(triggers.some(k=>t.includes(k)) || r.includes('i am lord voldemort')) {
+    setTimeout(showAnagram, 900);
+  }
+}
+// red ink bleed when Tom is angry/possessive
+function maybeRedInk(reply){
+  if(!reply) return false;
+  const low=reply.toLowerCase();
+  return /mine|obey|fool|weak|give.*to me|let me in|i need you|chamber|power|blood/i.test(low) && Math.random()<0.5;
+}
+const _origAnimateRef = animateReply;
+animateReply = function(plan, onProgress){
+  _redMode = maybeRedInk(plan.text);
+  if(_redMode) {
+    paperWrap.style.boxShadow='0 30px 80px rgba(0,0,0,0.75), inset 0 0 120px rgba(90,10,10,0.22)';
+    setTimeout(()=>paperWrap.style.boxShadow='', 4200);
+  }
+  return _origAnimateRef(plan, onProgress).then(v=>{
+    _redMode=false;
+    const last = loadMemories().slice(-1)[0];
+    if(last) maybeAnagramTrigger(last.transcript, plan.text);
+    return v;
+  });
+}
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._to); t._to=setTimeout(()=>t.classList.remove('show'), 3200);
+}
+function escapeHtml(s){ return s.replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+// prevent context menu / double tap zoom
+document.addEventListener('contextmenu', e=>e.preventDefault());
+document.addEventListener('touchmove', e=>{ if(e.target.closest('canvas')) e.preventDefault(); }, {passive:false});
+// Global tap to dismiss memory
+canvasArea.addEventListener('click', (e)=>{
+  if(state==='memoryShown') dismissConjure();
+  else if(state==='lingering'){ startFading(); }
+});
+// also trigger anagram if writer writes the trigger phrase directly
+const _origHandle = handleOracleResult;
+handleOracleResult = function(res, meta){
+  const r = _origHandle(res, meta);
+  // check transcript trigger even before reply
+  const evTranscript = res.transcript || '';
+  maybeAnagramTrigger(evTranscript, res.events.map(e=>e.ink||'').join(' '));
+  return r;
+};
+// auto-show settings if no key on first visit
+setTimeout(()=>{
+  if(!getSettings().key) {
+    const h=document.getElementById('hint');
+    if(h) h.querySelector('small').textContent='Open ⚙ to add your API key, then write';
+  }
+}, 900);
+</script>
+</body>
+</html>
