@@ -37,7 +37,7 @@ reply fades → memory saved
 
 Persona (`PERSONA` + `MEMORY_PROTOCOL`) is built from `src/oracle.rs` — includes catalog + transcription protocol. See `index.html:161`.
 
-### Quick Start (zero-setup for your partner)
+### Quick Start 
 
 **1. Get a free vision key — no card:**
 
